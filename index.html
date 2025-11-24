@@ -48,6 +48,7 @@
       }
     </style>
   </head>
+
   <body>
     <div id="root"></div>
 
@@ -90,7 +91,6 @@
         </svg>
       );
 
-      // Lucide icons as React components
       const Phone = ({ className }) => (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -226,8 +226,16 @@
             alt: "Burgers & Wraps",
             title: "Burgers & Wraps",
           },
-          { src: "images/png-5.png", alt: "Drinks Menu", title: "Drinks" },
-          { src: "images/png-6.png", alt: "Desserts Menu", title: "Desserts" },
+          {
+            src: "images/png-5.png",
+            alt: "Drinks Menu",
+            title: "Drinks",
+          },
+          {
+            src: "images/png-6.png",
+            alt: "Desserts Menu",
+            title: "Desserts",
+          },
           {
             src: "images/png-7.png",
             alt: "Wines & Cocktails",
@@ -236,7 +244,7 @@
         ];
 
         const links = [
-           {
+          {
             icon: Menu,
             text: "View Full Menu",
             subtext: "See what we offer",
@@ -281,9 +289,7 @@
           <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-white py-12 px-4">
             <div
               className={`max-w-lg mx-auto transition-all duration-1000 transform ${
-                isVisible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               }`}
             >
               {/* Logo Section */}
@@ -300,9 +306,7 @@
               {/* Location Card */}
               <div
                 className={`bg-white rounded-2xl shadow-md p-6 mb-6 border border-neutral-100 transform transition-all duration-700 delay-200 ${
-                  isVisible
-                    ? "opacity-100 translate-x-0"
-                    : "opacity-0 -translate-x-10"
+                  isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
                 }`}
               >
                 <div className="flex items-start gap-4">
@@ -315,11 +319,10 @@
                     </h3>
                     <p className="text-neutral-600 text-sm leading-relaxed">
                       Tom Mboya St, Braidwood House
-                      <br />
-                      Opposite Fire Station
+                      <br /> Opposite Fire Station
                     </p>
                     <a
-                      href="https://maps.google.com/?q=Braidwood+House+Tom+Mboya+Street+Nairobi"
+                      href="https://maps.app.goo.gl/swjF8fk4HTB4Aq9A9"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-orange-600 hover:text-orange-700 text-xs font-medium transition-colors duration-300"
@@ -349,7 +352,6 @@
                 {links.map((link, index) => {
                   const Icon = link.icon;
                   const LinkComponent = link.href ? "a" : "button";
-
                   return (
                     <LinkComponent
                       key={index}
@@ -359,13 +361,9 @@
                       rel={link.href ? "noopener noreferrer" : undefined}
                       className={`group w-full bg-white hover:bg-neutral-50 border border-neutral-200 hover:border-orange-500 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] ${
                         link.primary ? "p-5" : "p-4"
-                      } flex items-center gap-4 cursor-pointer text-left
-                          ${
-                            isVisible
-                              ? "opacity-100 translate-y-0"
-                              : "opacity-0 translate-y-10"
-                          }
-                        `}
+                      } flex items-center gap-4 cursor-pointer text-left ${
+                        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                      }`}
                       style={{ transitionDelay: `${(index + 3) * 100}ms` }}
                     >
                       <div className="bg-orange-50 rounded-xl p-3 group-hover:bg-orange-100 transition-all duration-300">
@@ -489,12 +487,16 @@
               </div>
             )}
 
-            <style>{`
+            <style>
+              {`
                 @keyframes fadeIn {
-                  from { opacity: 0; }
-                  to { opacity: 1; }
+                  from {
+                    opacity: 0;
+                  }
+                  to {
+                    opacity: 1;
+                  }
                 }
-
                 @keyframes slideDown {
                   from {
                     opacity: 0;
@@ -505,7 +507,6 @@
                     transform: translateY(0);
                   }
                 }
-
                 @keyframes slideUp {
                   from {
                     opacity: 0;
@@ -516,24 +517,21 @@
                     transform: translateY(0);
                   }
                 }
-
                 ::-webkit-scrollbar {
                   width: 10px;
                 }
-
                 ::-webkit-scrollbar-track {
                   background: #171717;
                 }
-
                 ::-webkit-scrollbar-thumb {
                   background: #ea580c;
                   border-radius: 5px;
                 }
-
                 ::-webkit-scrollbar-thumb:hover {
                   background: #c2410c;
                 }
-              `}</style>
+              `}
+            </style>
           </div>
         );
       };
