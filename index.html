@@ -200,10 +200,32 @@
       const PorkAndGoLinktree = () => {
         const [menuOpen, setMenuOpen] = useState(false);
         const [isVisible, setIsVisible] = useState(false);
+        const [imagesLoaded, setImagesLoaded] = useState(0);
+        const [isOpen, setIsOpen] = useState(true);
+        const totalImages = 7;
 
         useEffect(() => {
           setIsVisible(true);
+          
+          // Check if restaurant is open (8 AM - 10 PM)
+          const checkOpenStatus = () => {
+            const now = new Date();
+            const currentHour = now.getHours();
+            setIsOpen(currentHour >= 8 && currentHour < 22); // 8 AM to 10 PM
+          };
+          
+          checkOpenStatus();
+          // Check every minute
+          const interval = setInterval(checkOpenStatus, 60000);
+          
+          return () => clearInterval(interval);
         }, []);
+
+        useEffect(() => {
+          if (menuOpen) {
+            setImagesLoaded(0);
+          }
+        }, [menuOpen]);
 
         const menuImages = [
           {
@@ -256,14 +278,14 @@
             text: "WhatsApp Order",
             subtext: "Chat with us directly",
             href: "https://wa.me/254710554077?text=Hi%20Pork%20%26%20Go!%20I'd%20like%20to%20place%20an%20order",
-            primary: true,
+            primary: false,
           },
           {
             icon: Phone,
             text: "Call to Order",
             subtext: "0710 554 077",
             href: "tel:0710554077",
-            primary: true,
+            primary: false,
           },
         ];
 
@@ -305,45 +327,59 @@
 
               {/* Location Card */}
               <div
-                className={`bg-white rounded-2xl shadow-md p-6 mb-6 border border-neutral-100 transform transition-all duration-700 delay-200 ${
+                className={`bg-gradient-to-br from-orange-50 to-white rounded-2xl shadow-md p-6 mb-6 border border-orange-100 transform transition-all duration-700 delay-200 ${
                   isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
                 }`}
               >
-                <div className="flex items-start gap-4">
-                  <div className="bg-orange-50 rounded-xl p-3 flex-shrink-0">
-                    <MapPin className="text-orange-600 w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-base text-neutral-800 mb-2">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <h3 className="font-semibold text-lg text-neutral-800">
                       Visit Us
                     </h3>
-                    <p className="text-neutral-600 text-sm leading-relaxed">
-                      Tom Mboya St, Braidwood House
-                      <br /> Opposite Fire Station
-                    </p>
-                    <a
-                      href="https://maps.app.goo.gl/swjF8fk4HTB4Aq9A9"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-orange-600 hover:text-orange-700 text-xs font-medium transition-colors duration-300"
-                    >
-                      <span>Get Directions</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M5 12h14"></path>
-                        <path d="m12 5 7 7-7 7"></path>
-                      </svg>
-                    </a>
+                    <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full ${
+                      isOpen ? 'bg-green-50' : 'bg-red-50'
+                    }`}>
+                      <span className={`w-2 h-2 rounded-full ${
+                        isOpen ? 'bg-green-500 animate-pulse' : 'bg-red-500'
+                      }`}></span>
+                      <span className={`font-medium text-xs ${
+                        isOpen ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {isOpen ? 'Open' : 'Closed'}
+                      </span>
+                    </div>
                   </div>
+                  <p className="text-neutral-700 text-sm font-medium mb-1">
+                    Tom Mboya St, Braidwood House
+                  </p>
+                  <p className="text-neutral-600 text-sm mb-2">
+                    Opposite Fire Station
+                  </p>
+                  <p className="text-neutral-500 text-xs mb-3">
+                    🕒 8:00 AM - 10:00 PM Daily • 🍽️ Dine-in & Takeaway
+                  </p>
+                  <a
+                    href="https://maps.app.goo.gl/swjF8fk4HTB4Aq9A9"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-orange-600 hover:text-orange-700 text-sm font-semibold transition-colors duration-300"
+                  >
+                    <span>Get Directions</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M5 12h14"></path>
+                      <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
 
@@ -359,7 +395,7 @@
                       onClick={link.onClick}
                       target={link.href ? "_blank" : undefined}
                       rel={link.href ? "noopener noreferrer" : undefined}
-                      className={`group w-full bg-white hover:bg-neutral-50 border border-neutral-200 hover:border-orange-500 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] ${
+                      className={`group w-full bg-white hover:bg-neutral-50 border border-neutral-200 hover:border-orange-500 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 ${
                         link.primary ? "p-5" : "p-4"
                       } flex items-center gap-4 cursor-pointer text-left ${
                         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
@@ -437,7 +473,7 @@
                   {/* Close Button */}
                   <button
                     onClick={() => setMenuOpen(false)}
-                    className="fixed top-6 right-6 bg-orange-600 hover:bg-orange-700 text-white rounded-full p-3 shadow-2xl z-50 transition-all duration-300 transform hover:scale-110"
+                    className="fixed top-6 right-6 bg-orange-600 hover:bg-orange-700 text-white rounded-full p-3 shadow-2xl z-50 transition-all duration-300"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -454,6 +490,16 @@
                       Explore our menu and discover your next favorite dish
                     </p>
                   </div>
+
+                  {/* Loading Spinner */}
+                  {imagesLoaded < totalImages && (
+                    <div className="flex flex-col items-center justify-center mb-8">
+                      <div className="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+                      <p className="text-neutral-400 text-sm mt-3">
+                        Loading menu... ({imagesLoaded}/{totalImages})
+                      </p>
+                    </div>
+                  )}
 
                   {/* Menu Images */}
                   <div
@@ -475,7 +521,9 @@
                         <img
                           src={image.src}
                           alt={image.alt}
-                          className="w-full rounded-xl shadow-2xl transform hover:scale-[1.02] transition-transform duration-300"
+                          loading="lazy"
+                          onLoad={() => setImagesLoaded(prev => prev + 1)}
+                          className="w-full rounded-xl shadow-2xl transition-transform duration-300"
                         />
                       </div>
                     ))}
