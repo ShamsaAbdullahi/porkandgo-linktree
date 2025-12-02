@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Pork & Go - We Got The Meats. Premium meat restaurant in Nairobi CBD."
+      content="Pork & Go - We Got The Meats. Premium meat restaurant in Nairobi CBD. Now opening a new location!"
     />
     <meta
       name="keywords"
-      content="pork, restaurant, nairobi, meat, grill, dining"
+      content="pork, restaurant, nairobi, meat, grill, dining, tom mboya, cuttack"
     />
     <title>Pork & Go - We Got The Meats</title>
 
@@ -40,11 +40,113 @@
     <style>
       * {
         font-family: "Manrope", sans-serif;
+        scroll-behavior: smooth;
       }
 
       body {
         margin: 0;
         padding: 0;
+      }
+
+      /* Parallax effect */
+      .parallax-wrapper {
+        transform-style: preserve-3d;
+      }
+
+      .parallax-layer {
+        transition: transform 0.3s ease-out;
+      }
+
+      /* Custom animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translate3d(0, -20px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 30px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      @keyframes pulse-glow {
+        0%, 100% {
+          box-shadow: 0 0 20px rgba(234, 88, 12, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(234, 88, 12, 0.5);
+        }
+      }
+
+      /* Smooth animations without blur */
+      .smooth-animate {
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        -webkit-font-smoothing: subpixel-antialiased;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -1000px 0;
+        }
+        100% {
+          background-position: 1000px 0;
+        }
+      }
+
+      .shimmer {
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.3) 50%,
+          transparent 100%
+        );
+        background-size: 1000px 100%;
+        animation: shimmer 3s infinite;
+      }
+
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #171717;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #ea580c;
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #c2410c;
+      }
+
+      /* Focus states for accessibility */
+      *:focus-visible {
+        outline: 2px solid #ea580c;
+        outline-offset: 2px;
       }
     </style>
   </head>
@@ -52,13 +154,11 @@
   <body>
     <div id="root"></div>
 
-    <!-- Lucide Icons (SVG Icons Library) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <!-- React Component -->
     <script type="text/babel">
-      const { useState, useEffect } = React;
+      const { useState, useEffect, useRef } = React;
 
+      // Icon Components
       const Menu = ({ className }) => (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -197,35 +297,147 @@
         </svg>
       );
 
+      const Share2 = ({ className }) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+        >
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line>
+          <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line>
+        </svg>
+      );
+
+      const ChevronUp = ({ className }) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+        >
+          <path d="m18 15-6-6-6 6"></path>
+        </svg>
+      );
+
+      const Sparkles = ({ className }) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+        >
+          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+          <path d="M5 3v4"></path>
+          <path d="M19 17v4"></path>
+          <path d="M3 5h4"></path>
+          <path d="M17 19h4"></path>
+        </svg>
+      );
+
       const PorkAndGoLinktree = () => {
         const [menuOpen, setMenuOpen] = useState(false);
         const [isVisible, setIsVisible] = useState(false);
         const [imagesLoaded, setImagesLoaded] = useState(0);
         const [isOpen, setIsOpen] = useState(true);
+        const [showScrollTop, setShowScrollTop] = useState(false);
+        const [shareSuccess, setShareSuccess] = useState(false);
+        const [comingSoonOpen, setComingSoonOpen] = useState(false);
         const totalImages = 7;
+        const containerRef = useRef(null);
 
         useEffect(() => {
           setIsVisible(true);
-          
+
           // Check if restaurant is open (8 AM - 10 PM)
           const checkOpenStatus = () => {
             const now = new Date();
             const currentHour = now.getHours();
-            setIsOpen(currentHour >= 8 && currentHour < 22); // 8 AM to 10 PM
+            setIsOpen(currentHour >= 8 && currentHour < 22);
           };
-          
+
           checkOpenStatus();
-          // Check every minute
           const interval = setInterval(checkOpenStatus, 60000);
-          
+
           return () => clearInterval(interval);
         }, []);
 
         useEffect(() => {
           if (menuOpen) {
             setImagesLoaded(0);
+            document.body.style.overflow = "hidden";
+          } else {
+            document.body.style.overflow = "unset";
           }
+
+          return () => {
+            document.body.style.overflow = "unset";
+          };
         }, [menuOpen]);
+
+        // Scroll to top handler
+        const scrollToTop = () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+
+        // Track scroll for back to top button
+        useEffect(() => {
+          const handleScroll = () => {
+            setShowScrollTop(window.scrollY > 400);
+          };
+
+          window.addEventListener("scroll", handleScroll);
+          return () => window.removeEventListener("scroll", handleScroll);
+        }, []);
+
+        // Share functionality
+        const handleShare = async () => {
+          const shareData = {
+            title: "Pork & Go - We Got The Meats",
+            text: "Check out Pork & Go restaurant! Premium meats in Nairobi CBD.",
+            url: window.location.href,
+          };
+
+          try {
+            if (navigator.share) {
+              await navigator.share(shareData);
+            } else {
+              // Fallback: copy to clipboard
+              await navigator.clipboard.writeText(window.location.href);
+              setShareSuccess(true);
+              setTimeout(() => setShareSuccess(false), 2000);
+            }
+          } catch (err) {
+            console.log("Error sharing:", err);
+          }
+        };
+
+        // Track link clicks (you can connect this to analytics)
+        const trackClick = (linkName) => {
+          console.log(`Link clicked: ${linkName}`);
+          // Add your analytics tracking here
+        };
 
         const menuImages = [
           {
@@ -267,10 +479,32 @@
 
         const links = [
           {
+            icon: MapPin,
+            text: "Coming Soon",
+            subtext: "Nairobi CBD • New Location",
+            onClick: () => {
+              setComingSoonOpen(true);
+              trackClick("New Location Coming Soon");
+            },
+            primary: false,
+            isNew: true,
+          },
+          {
+            icon: MapPin,
+            text: "Visit Us - Nairobi CBD • Braidwood House",
+            subtext: "Tom Mboya St • 8AM-10PM • Dine-in & Takeaway",
+            href: "https://maps.app.goo.gl/swjF8fk4HTB4Aq9A9",
+            primary: false,
+            showStatus: true,
+          },
+          {
             icon: Menu,
             text: "View Full Menu",
             subtext: "See what we offer",
-            onClick: () => setMenuOpen(true),
+            onClick: () => {
+              setMenuOpen(true);
+              trackClick("Menu");
+            },
             primary: false,
           },
           {
@@ -279,6 +513,7 @@
             subtext: "Chat with us directly",
             href: "https://wa.me/254710554077?text=Hi%20Pork%20%26%20Go!%20I'd%20like%20to%20place%20an%20order",
             primary: false,
+            onClick: () => trackClick("WhatsApp"),
           },
           {
             icon: Phone,
@@ -286,6 +521,7 @@
             subtext: "0710 554 077",
             href: "tel:0710554077",
             primary: false,
+            onClick: () => trackClick("Phone"),
           },
         ];
 
@@ -308,79 +544,22 @@
         ];
 
         return (
-          <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-white py-12 px-4">
+          <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-white py-12 px-4 relative">
             <div
+              ref={containerRef}
               className={`max-w-lg mx-auto transition-all duration-1000 transform ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-10"
               }`}
             >
               {/* Logo Section */}
-              <div className="text-center mb-4 transform hover:scale-[1.01] transition-transform duration-500">
-                <div className="inline-block bg-white rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-3 border border-neutral-100 w-10/12 sm:w-auto max-w-[280px]">
-                  <img
-                    src="images/png_logo.png"
-                    alt="Pork & Go - We Got The Meats"
-                    className="w-100 sm:w-40 md:w-52 max-w-full h-auto mx-auto"
-                  />
-                </div>
-              </div>
-
-              {/* Location Card */}
-              <div
-                className={`bg-gradient-to-br from-orange-50 to-white rounded-2xl shadow-md p-6 mb-6 border border-orange-100 transform transition-all duration-700 delay-200 ${
-                  isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
-                }`}
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <h3 className="font-semibold text-lg text-neutral-800">
-                      Visit Us
-                    </h3>
-                    <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full ${
-                      isOpen ? 'bg-green-50' : 'bg-red-50'
-                    }`}>
-                      <span className={`w-2 h-2 rounded-full ${
-                        isOpen ? 'bg-green-500 animate-pulse' : 'bg-red-500'
-                      }`}></span>
-                      <span className={`font-medium text-xs ${
-                        isOpen ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {isOpen ? 'Open' : 'Closed'}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-neutral-700 text-sm font-medium mb-1">
-                    Tom Mboya St, Braidwood House
-                  </p>
-                  <p className="text-neutral-600 text-sm mb-2">
-                    Opposite Fire Station
-                  </p>
-                  <p className="text-neutral-500 text-xs mb-3">
-                    🕒 8:00 AM - 10:00 PM Daily • 🍽️ Dine-in & Takeaway
-                  </p>
-                  <a
-                    href="https://maps.app.goo.gl/swjF8fk4HTB4Aq9A9"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-orange-600 hover:text-orange-700 text-sm font-semibold transition-colors duration-300"
-                  >
-                    <span>Get Directions</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12h14"></path>
-                      <path d="m12 5 7 7-7 7"></path>
-                    </svg>
-                  </a>
-                </div>
+              <div className="text-center mb-6 smooth-animate">
+                <img
+                  src="images/png_logo.png"
+                  alt="Pork & Go - We Got The Meats"
+                  className="w-48 sm:w-52 md:w-60 max-w-full h-auto mx-auto transition-transform duration-300 hover:scale-105"
+                />
               </div>
 
               {/* Main Links */}
@@ -395,14 +574,42 @@
                       onClick={link.onClick}
                       target={link.href ? "_blank" : undefined}
                       rel={link.href ? "noopener noreferrer" : undefined}
-                      className={`group w-full bg-white hover:bg-neutral-50 border border-neutral-200 hover:border-orange-500 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 ${
+                      className={`smooth-animate group w-full bg-white hover:bg-neutral-50 border ${
+                        link.isNew ? 'border-orange-500 bg-orange-50/30' : 'border-neutral-200'
+                      } hover:border-orange-500 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-200 ${
                         link.primary ? "p-5" : "p-4"
-                      } flex items-center gap-4 cursor-pointer text-left ${
-                        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                      } flex items-center gap-4 cursor-pointer text-left relative ${
+                        isVisible
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 translate-y-10"
                       }`}
-                      style={{ transitionDelay: `${(index + 3) * 100}ms` }}
+                      style={{ 
+                        transitionDelay: `${(index + 2) * 100}ms`,
+                        transform: 'translate3d(0, 0, 0)'
+                      }}
+                      aria-label={link.text}
                     >
-                      <div className="bg-orange-50 rounded-xl p-3 group-hover:bg-orange-100 transition-all duration-300">
+                      {/* NEW Badge */}
+                      {link.isNew && (
+                        <div className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1 animate-pulse">
+                          <Sparkles className="w-3 h-3" />
+                          NEW
+                        </div>
+                      )}
+                      
+                      {/* Open/Closed Status Badge */}
+                      {link.showStatus && (
+                        <div className={`absolute -top-2 -right-2 ${
+                          isOpen ? 'bg-green-500' : 'bg-red-500'
+                        } text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1`}>
+                          <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                          {isOpen ? 'OPEN' : 'CLOSED'}
+                        </div>
+                      )}
+                      
+                      <div className={`${
+                        link.isNew ? 'bg-orange-100' : 'bg-orange-50'
+                      } rounded-xl p-3 group-hover:bg-orange-100 transition-colors duration-200`}>
                         <Icon className="w-5 h-5 text-orange-600" />
                       </div>
                       <div className="flex-1">
@@ -419,7 +626,7 @@
                           </div>
                         )}
                       </div>
-                      <div className="text-orange-600 text-lg group-hover:translate-x-1 transition-transform duration-300">
+                      <div className="text-orange-600 text-lg transition-transform duration-200 group-hover:translate-x-1">
                         →
                       </div>
                     </LinkComponent>
@@ -427,9 +634,9 @@
                 })}
               </div>
 
-              {/* Social Links - Icon Only */}
+              {/* Social Links */}
               <div
-                className={`flex justify-center items-center gap-4 mb-10 transition-all duration-700 delay-500 ${
+                className={`flex justify-center items-center gap-4 mb-6 transition-all duration-700 delay-500 ${
                   isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
                 }`}
               >
@@ -441,13 +648,32 @@
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-orange-50 hover:bg-orange-600 text-orange-600 hover:text-white rounded-full p-3 transition-all duration-300 transform hover:scale-110 shadow-sm hover:shadow-lg group"
+                      className="smooth-animate bg-orange-50 hover:bg-orange-600 text-orange-600 hover:text-white rounded-full p-3 transition-all duration-200 shadow-sm hover:shadow-lg group"
                       aria-label={social.text}
+                      onClick={() => trackClick(social.text)}
+                      style={{ transform: 'translate3d(0, 0, 0)' }}
                     >
                       <Icon className="w-6 h-6" />
                     </a>
                   );
                 })}
+              </div>
+
+              {/* Share Button */}
+              <div
+                className={`flex justify-center mb-10 transition-all duration-700 delay-600 ${
+                  isVisible ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <button
+                  onClick={handleShare}
+                  className="smooth-animate inline-flex items-center gap-2 bg-white hover:bg-neutral-50 text-neutral-700 px-6 py-3 rounded-full font-medium text-sm border border-neutral-200 hover:border-orange-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                  aria-label="Share this page"
+                  style={{ transform: 'translate3d(0, 0, 0)' }}
+                >
+                  <Share2 className="w-4 h-4" />
+                  {shareSuccess ? "Link Copied!" : "Share"}
+                </button>
               </div>
 
               {/* Footer */}
@@ -462,6 +688,137 @@
               </div>
             </div>
 
+            {/* Back to Top Button */}
+            {showScrollTop && (
+              <button
+                onClick={scrollToTop}
+                className="smooth-animate fixed bottom-6 right-6 bg-orange-600 hover:bg-orange-700 text-white rounded-full p-3 shadow-2xl z-40 transition-all duration-200"
+                aria-label="Scroll to top"
+                style={{
+                  animation: "slideUp 0.3s ease-out",
+                  transform: 'translate3d(0, 0, 0)'
+                }}
+              >
+                <ChevronUp className="w-5 h-5" />
+              </button>
+            )}
+
+            {/* Coming Soon Modal */}
+            {comingSoonOpen && (
+              <div
+                className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+                onClick={() => setComingSoonOpen(false)}
+                style={{ animation: "fadeIn 0.3s ease-out" }}
+              >
+                <div
+                  className="bg-white rounded-3xl max-w-md w-full p-10 relative"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ animation: "slideUp 0.4s ease-out" }}
+                >
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setComingSoonOpen(false)}
+                    className="absolute top-5 right-5 text-neutral-300 hover:text-neutral-600 transition-colors"
+                    aria-label="Close"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+
+                  {/* Content */}
+                  <div className="text-center">
+                    {/* Icon */}
+                    <div className="mb-6">
+                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-orange-50">
+                        <Sparkles className="w-8 h-8 text-orange-600" />
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h2 className="text-3xl font-bold text-neutral-900 mb-3 tracking-tight">
+                      We're Expanding
+                    </h2>
+                    
+                    {/* Subtitle */}
+                    <p className="text-neutral-500 text-base mb-8 leading-relaxed">
+                      Something exciting is in the works.<br/>
+                      A new chapter begins soon.
+                    </p>
+
+                    {/* Divider */}
+                    <div className="w-12 h-px bg-neutral-200 mx-auto mb-8"></div>
+
+                    {/* Info Points */}
+                    <div className="space-y-5 mb-8 text-left">
+                      <div className="flex items-start gap-4">
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 flex-shrink-0"></div>
+                        <div>
+                          <p className="font-semibold text-neutral-900 text-sm mb-1">
+                            New Location
+                          </p>
+                          <p className="text-xs text-neutral-500 leading-relaxed">
+                            Bringing our signature experience to a new neighborhood
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start gap-4">
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 flex-shrink-0"></div>
+                        <div>
+                          <p className="font-semibold text-neutral-900 text-sm mb-1">
+                            Same Excellence
+                          </p>
+                          <p className="text-xs text-neutral-500 leading-relaxed">
+                            The quality and taste you love, now closer to you
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-4">
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 flex-shrink-0"></div>
+                        <div>
+                          <p className="font-semibold text-neutral-900 text-sm mb-1">
+                            Enhanced Space
+                          </p>
+                          <p className="text-xs text-neutral-500 leading-relaxed">
+                            A refined dining experience in a larger setting
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="w-12 h-px bg-neutral-200 mx-auto mb-8"></div>
+
+                    {/* Call to Action */}
+                    <div className="space-y-3">
+                      <a
+                        href="https://www.instagram.com/pork_and_go/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="smooth-animate w-full inline-flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3.5 rounded-xl font-medium text-sm transition-all duration-200"
+                        onClick={() => trackClick("Follow Instagram from Modal")}
+                      >
+                        <Instagram className="w-4 h-4" />
+                        Follow for Updates
+                      </a>
+                      
+                      <button
+                        onClick={() => setComingSoonOpen(false)}
+                        className="smooth-animate w-full inline-flex items-center justify-center gap-2 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-600 hover:text-neutral-900 px-6 py-3.5 rounded-xl font-medium text-sm transition-all duration-200"
+                      >
+                        Maybe Later
+                      </button>
+                    </div>
+
+                    {/* Footer */}
+                    <p className="text-neutral-400 text-xs mt-8 tracking-wide">
+                      COMING SOON
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Menu Modal */}
             {menuOpen && (
               <div
@@ -473,10 +830,22 @@
                   {/* Close Button */}
                   <button
                     onClick={() => setMenuOpen(false)}
-                    className="fixed top-6 right-6 bg-orange-600 hover:bg-orange-700 text-white rounded-full p-3 shadow-2xl z-50 transition-all duration-300"
+                    className="fixed top-6 right-6 bg-orange-600 hover:bg-orange-700 text-white rounded-full p-3 shadow-2xl z-50 transition-all duration-300 hover:scale-110"
+                    aria-label="Close menu"
                   >
                     <X className="w-5 h-5" />
                   </button>
+
+                  {/* Back to Top in Menu */}
+                  {showScrollTop && (
+                    <button
+                      onClick={scrollToTop}
+                      className="fixed bottom-6 right-6 bg-white hover:bg-neutral-100 text-orange-600 rounded-full p-3 shadow-2xl z-50 transition-all duration-300 hover:scale-110"
+                      aria-label="Scroll to top"
+                    >
+                      <ChevronUp className="w-5 h-5" />
+                    </button>
+                  )}
 
                   {/* Menu Title */}
                   <div
@@ -522,8 +891,8 @@
                           src={image.src}
                           alt={image.alt}
                           loading="lazy"
-                          onLoad={() => setImagesLoaded(prev => prev + 1)}
-                          className="w-full rounded-xl shadow-2xl transition-transform duration-300"
+                          onLoad={() => setImagesLoaded((prev) => prev + 1)}
+                          className="w-full rounded-xl shadow-2xl transition-transform duration-300 hover:scale-[1.02]"
                         />
                       </div>
                     ))}
@@ -534,52 +903,6 @@
                 </div>
               </div>
             )}
-
-            <style>
-              {`
-                @keyframes fadeIn {
-                  from {
-                    opacity: 0;
-                  }
-                  to {
-                    opacity: 1;
-                  }
-                }
-                @keyframes slideDown {
-                  from {
-                    opacity: 0;
-                    transform: translateY(-20px);
-                  }
-                  to {
-                    opacity: 1;
-                    transform: translateY(0);
-                  }
-                }
-                @keyframes slideUp {
-                  from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                  }
-                  to {
-                    opacity: 1;
-                    transform: translateY(0);
-                  }
-                }
-                ::-webkit-scrollbar {
-                  width: 10px;
-                }
-                ::-webkit-scrollbar-track {
-                  background: #171717;
-                }
-                ::-webkit-scrollbar-thumb {
-                  background: #ea580c;
-                  border-radius: 5px;
-                }
-                ::-webkit-scrollbar-thumb:hover {
-                  background: #c2410c;
-                }
-              `}
-            </style>
           </div>
         );
       };
