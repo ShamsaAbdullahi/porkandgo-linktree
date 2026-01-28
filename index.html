@@ -480,14 +480,12 @@
         const links = [
           {
             icon: MapPin,
-            text: "Coming Soon",
-            subtext: "Nairobi CBD • New Location",
-            onClick: () => {
-              setComingSoonOpen(true);
-              trackClick("New Location Coming Soon");
-            },
+            text: "New Location - Development House",
+            subtext: "Opposite Afya centre• Now Open",
+            href: "https://maps.app.goo.gl/Ry71wsTaM5CkxEsd6",
             primary: false,
             isNew: true,
+            onClick: () => trackClick("New Location - Development House"),
           },
           {
             icon: MapPin,
@@ -701,122 +699,6 @@
               >
                 <ChevronUp className="w-5 h-5" />
               </button>
-            )}
-
-            {/* Coming Soon Modal */}
-            {comingSoonOpen && (
-              <div
-                className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
-                onClick={() => setComingSoonOpen(false)}
-                style={{ animation: "fadeIn 0.3s ease-out" }}
-              >
-                <div
-                  className="bg-white rounded-2xl max-w-sm w-full p-6 sm:p-8 relative"
-                  onClick={(e) => e.stopPropagation()}
-                  style={{ animation: "slideUp 0.4s ease-out" }}
-                >
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setComingSoonOpen(false)}
-                    className="absolute top-4 right-4 text-neutral-300 hover:text-neutral-600 transition-colors"
-                    aria-label="Close"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-
-                  {/* Content */}
-                  <div className="text-center">
-                    {/* Icon */}
-                    <div className="mb-5">
-                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-orange-50">
-                        <Sparkles className="w-6 h-6 text-orange-600" />
-                      </div>
-                    </div>
-
-                    {/* Title */}
-                    <h2 className="text-2xl font-bold text-neutral-900 mb-2 tracking-tight">
-                      We're Expanding
-                    </h2>
-                    
-                    {/* Subtitle */}
-                    <p className="text-neutral-500 text-sm mb-6 leading-relaxed">
-                      Something exciting is in the works.<br/>
-                      A new chapter begins soon.
-                    </p>
-
-                    {/* Divider */}
-                    <div className="w-10 h-px bg-neutral-200 mx-auto mb-6"></div>
-
-                    {/* Info Points */}
-                    <div className="space-y-4 mb-6 text-left">
-                      <div className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-1.5 flex-shrink-0"></div>
-                        <div>
-                          <p className="font-semibold text-neutral-900 text-xs mb-0.5">
-                            New Location
-                          </p>
-                          <p className="text-xs text-neutral-500 leading-relaxed">
-                            Bringing our signature experience to a new neighborhood
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-1.5 flex-shrink-0"></div>
-                        <div>
-                          <p className="font-semibold text-neutral-900 text-xs mb-0.5">
-                            Same Excellence
-                          </p>
-                          <p className="text-xs text-neutral-500 leading-relaxed">
-                            The quality and taste you love, now closer to you
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-1.5 flex-shrink-0"></div>
-                        <div>
-                          <p className="font-semibold text-neutral-900 text-xs mb-0.5">
-                            Enhanced Space
-                          </p>
-                          <p className="text-xs text-neutral-500 leading-relaxed">
-                            A refined dining experience in a larger setting
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Divider */}
-                    <div className="w-10 h-px bg-neutral-200 mx-auto mb-6"></div>
-
-                    {/* Call to Action */}
-                    <div className="space-y-2.5">
-                      <a
-                        href="https://www.instagram.com/pork_and_go/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="smooth-animate w-full inline-flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-5 py-3 rounded-xl font-medium text-sm transition-all duration-200"
-                        onClick={() => trackClick("Follow Instagram from Modal")}
-                      >
-                        <Instagram className="w-4 h-4" />
-                        Follow for Updates
-                      </a>
-                      
-                      <button
-                        onClick={() => setComingSoonOpen(false)}
-                        className="smooth-animate w-full inline-flex items-center justify-center gap-2 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-600 hover:text-neutral-900 px-5 py-3 rounded-xl font-medium text-sm transition-all duration-200"
-                      >
-                        Maybe Later
-                      </button>
-                    </div>
-
-                    {/* Footer */}
-                    <p className="text-neutral-400 text-xs mt-6 tracking-wide">
-                      COMING SOON
-                    </p>
-                  </div>
-                </div>
-              </div>
             )}
 
             {/* Menu Modal */}
