@@ -229,6 +229,64 @@
       #root.loaded {
         opacity: 1;
       }
+      .static-fallback {
+        min-height: 100vh;
+        padding: 24px 16px 40px;
+        background: linear-gradient(135deg, #fff7ed 0%, #ffffff 50%, #fff7ed 100%);
+        color: #171717;
+      }
+      .static-fallback__inner {
+        width: min(100%, 32rem);
+        margin: 0 auto;
+        text-align: center;
+      }
+      .static-fallback__logo {
+        width: min(15rem, 72vw);
+        height: auto;
+        margin: 0 auto 28px;
+      }
+      .static-fallback__links {
+        display: grid;
+        gap: 12px;
+      }
+      .static-fallback__link {
+        display: block;
+        padding: 16px;
+        border: 1px solid #e5e5e5;
+        border-radius: 16px;
+        background: #ffffff;
+        color: #171717;
+        text-align: left;
+        text-decoration: none;
+        box-shadow: 0 1px 2px rgba(23, 23, 23, 0.06);
+      }
+      .static-fallback__link strong,
+      .static-fallback__link span {
+        display: block;
+      }
+      .static-fallback__link strong {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .static-fallback__link span {
+        margin-top: 4px;
+        color: #737373;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      .static-fallback__socials {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 24px;
+      }
+      .static-fallback__socials a {
+        color: #ea580c;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+      }
     </style>
   </head>
   <body>
@@ -239,7 +297,98 @@
       <div class="loading-text">Loading your meats...</div>
     </div>
 
-    <div id="root"></div>
+    <div id="root">
+      <main class="static-fallback">
+        <div class="static-fallback__inner">
+          <img
+            src="images/png_logo.png"
+            alt="Pork & Go - We Got The Meats"
+            class="static-fallback__logo"
+          />
+          <div class="static-fallback__links">
+            <a
+              class="static-fallback__link"
+              href="https://maps.app.goo.gl/Ry71wsTaM5CkxEsd6"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <strong>New Location - Development House</strong>
+              <span>Opposite Afya centre - Now Open</span>
+            </a>
+            <a
+              class="static-fallback__link"
+              href="https://maps.app.goo.gl/swjF8fk4HTB4Aq9A9"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <strong>Visit Us - Nairobi CBD - Braidwood House</strong>
+              <span>Tom Mboya St - 8AM-10PM - Dine-in & Takeaway</span>
+            </a>
+            <a class="static-fallback__link" href="images/menu.pdf">
+              <strong>View Full Menu</strong>
+              <span>Open the menu PDF</span>
+            </a>
+            <a
+              class="static-fallback__link"
+              href="https://wa.me/254710554077?text=Hi%20Pork%20%26%20Go!%20I'd%20like%20to%20place%20an%20order"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <strong>WhatsApp Order</strong>
+              <span>Chat with us directly</span>
+            </a>
+            <a class="static-fallback__link" href="tel:0710554077">
+              <strong>Call to Order</strong>
+              <span>0710 554 077</span>
+            </a>
+          </div>
+          <div class="static-fallback__socials" aria-label="Social links">
+            <a
+              href="https://www.instagram.com/pork_and_go/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Instagram</a>
+            <a
+              href="https://www.tiktok.com/@porkandgo"
+              target="_blank"
+              rel="noopener noreferrer"
+            >TikTok</a>
+            <a
+              href="https://www.facebook.com/porkandgokenya/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Facebook</a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      (function () {
+        function revealPage() {
+          const loadingScreen = document.getElementById("loading-screen");
+          const root = document.getElementById("root");
+          if (root) root.classList.add("loaded");
+          if (loadingScreen) {
+            loadingScreen.classList.add("hidden");
+            setTimeout(() => {
+              loadingScreen.style.display = "none";
+            }, 500);
+          }
+        }
+
+        window.revealPorkAndGoPage = revealPage;
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", () =>
+            setTimeout(revealPage, 900),
+          );
+        } else {
+          setTimeout(revealPage, 900);
+        }
+        window.addEventListener("load", () => setTimeout(revealPage, 250));
+        setTimeout(revealPage, 3500);
+      })();
+    </script>
 
     <script
       crossorigin
@@ -249,9 +398,9 @@
       crossorigin
       src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
     ></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.25.7/babel.min.js"></script>
 
-    <script type="text/babel">
+    <script type="text/babel" data-presets="react">
       const { useState, useEffect, useRef } = React;
 
       const Menu = ({ className }) => (
@@ -498,15 +647,7 @@
 
         useEffect(() => {
           const hideLoadingScreen = () => {
-            const loadingScreen = document.getElementById("loading-screen");
-            const root = document.getElementById("root");
-            if (loadingScreen) {
-              loadingScreen.classList.add("hidden");
-              setTimeout(() => {
-                loadingScreen.style.display = "none";
-              }, 500);
-            }
-            if (root) root.classList.add("loaded");
+            if (window.revealPorkAndGoPage) window.revealPorkAndGoPage();
             setIsVisible(true);
           };
           setTimeout(hideLoadingScreen, 800);
@@ -771,7 +912,7 @@
                 className={`text-center text-neutral-400 transition-all duration-1000 delay-800 ${isVisible ? "opacity-100" : "opacity-0"}`}
               >
                 <p className="text-xs">
-                  © 2025 Pork & Go 🔥 All Rights Reserved
+                  © 2026 Pork & Go 🔥 All Rights Reserved
                 </p>
               </div>
             </div>
